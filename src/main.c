@@ -1,5 +1,5 @@
 #include "util.h"
-#include "run.h"
+#include "prog.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +43,9 @@ int main(int argc, char **argv)
         size_t n;
         char **lines = util_readlines(argv[2], &n);
 
-        run_program(lines, n);
+        struct Prog *p = prog_alloc(lines, n);
+        prog_run(p);
+        prog_free(p);
 
         for (size_t i = 0; i < n; ++i)
             free(lines[i]);
