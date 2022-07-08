@@ -52,6 +52,20 @@ int main(int argc, char **argv)
 
         free(lines);
     }
+    else if (strcmp(argv[1], "debug") == 0)
+    {
+        size_t n;
+        char **lines = util_readlines(argv[2], &n);
+
+        struct Prog *p = prog_alloc(lines, n);
+        prog_debug(p);
+        prog_free(p);
+
+        for (size_t i = 0; i < n; ++i)
+            free(lines[i]);
+
+        free(lines);
+    }
     else
     {
         fprintf(stderr, "Command '%s' not recognized.\n", argv[1]);

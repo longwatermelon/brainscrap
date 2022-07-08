@@ -22,6 +22,8 @@ struct Prog *prog_alloc(char **lines, size_t n);
 void prog_free(struct Prog *p);
 
 void prog_run(struct Prog *p);
+void prog_debug(struct Prog *p);
+
 // Return false if program should stop
 bool prog_step(struct Prog *p);
 

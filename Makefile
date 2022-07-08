@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-std=gnu17 -ggdb -Wall
-LIBS=-lm
+LIBS=-lm -lncursesw
 
 SRC=$(wildcard src/*.c)
 OBJS=$(addprefix obj/, $(SRC:.c=.o))

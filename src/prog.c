@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ncurses.h>
+#include <unistd.h>
 
 
 struct Prog *prog_alloc(char **lines, size_t n)
@@ -34,6 +36,42 @@ void prog_run(struct Prog *p)
 {
     while (prog_step(p))
         ;
+}
+
+
+void prog_debug(struct Prog *p)
+{
+    initscr();
+    noecho();
+    curs_set(FALSE);
+
+    bool running = true;
+    while (running)
+    {
+        mvprintw(0, 0, "Current char: '%c'", p->prev);
+        mvprintw(1, 0, "Cell value: %d", *p->ptr);
+
+        for (size_t i = 0; i < p->n; ++i)
+            mvprintw(i + 3, 0, "%s\n", p->lines[i]);
+
+        refresh();
+        usleep(1000);
+
+        int ch = getch();
+
+        switch (ch)
+        {
+        case 'q':
+            running = false;
+            break;
+        case 'n':
+            if (!prog_step(p))
+                running = false;
+            break;
+        }
+    }
+
+    endwin();
 }
 
 
