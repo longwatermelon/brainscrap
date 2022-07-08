@@ -8,7 +8,7 @@ brainfuck commands (`.,+-<>`) are not solid and are executed by stepping on them
 The x will first check the tile in front of it, then move.
 
 # Control characters
-* wasd: Gamer controls to move the x
+* wasd: Gamer controls to turn the x (w: up, a: left, s: down, d: right)
 * ?: Conditional operator, turn right if true else left
 * e: Exit program
 
