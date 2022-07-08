@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-std=gnu17 -ggdb -Wall
+LIBS=-lm
 
 SRC=$(wildcard src/*.c)
 OBJS=$(addprefix obj/, $(SRC:.c=.o))
@@ -9,10 +10,10 @@ all:
 	$(MAKE) target
 
 target: $(OBJS)
-	$(CC) $(CFLAGS) $^
+	$(CC) $(CFLAGS) $^ $(LIBS)
 
 obj/src/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 clean:
 	-rm -rf obj/src a.out
