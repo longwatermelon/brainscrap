@@ -1,25 +1,60 @@
 #include "util.h"
+#include "run.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 int main(int argc, char **argv)
 {
-    if (argc == 1)
+    if (argc < 3)
     {
-        fprintf(stderr, "No file provided; exiting.\n");
+        printf("Usage: ./a.out [command] [command args]\n");
         exit(1);
     }
 
-    size_t n;
-    char **lines = util_readlines(argv[1], &n);
+    if (strcmp(argv[1], "make") == 0)
+    {
+        int size = atoi(argv[2]);
+        char *line = malloc(sizeof(char) * (size + 1));
+        memset(line, ' ', size);
+        line[size] = '\0';
 
-    printf("%zu\n", n);
+        line[0] = '#';
+        line[size - 1] = '#';
 
-    for (size_t i = 0; i < n; ++i)
-        free(lines[i]);
+        char *full_line = malloc(sizeof(char) * (size + 1));
+        memset(full_line, '#', size);
 
-    free(lines);
+        FILE *fp = fopen(argv[3], "w");
+        fprintf(fp, "%s\n", full_line);
+
+        for (int i = 1; i < size - 1; ++i)
+            fprintf(fp, "%s\n", line);
+
+        fprintf(fp, "%s", full_line);
+        fclose(fp);
+
+        free(line);
+        free(full_line);
+    }
+    else if (strcmp(argv[1], "run") == 0)
+    {
+        size_t n;
+        char **lines = util_readlines(argv[2], &n);
+
+        run_program(lines, n);
+
+        for (size_t i = 0; i < n; ++i)
+            free(lines[i]);
+
+        free(lines);
+    }
+    else
+    {
+        fprintf(stderr, "Command '%s' not recognized.\n", argv[1]);
+        exit(1);
+    }
 
     return 0;
 }
