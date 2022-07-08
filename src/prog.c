@@ -53,8 +53,10 @@ void prog_debug(struct Prog *p)
         mvprintw(0, 0, "Current char: '%c'", p->prev);
         mvprintw(1, 0, "Cell value: %d", *p->ptr);
 
+        mvprintw(3, 0, "[n] to step, [q] to quit");
+
         for (size_t i = 0; i < p->n; ++i)
-            mvprintw(i + 3, 0, "%s\n", p->lines[i]);
+            mvprintw(i + 5, 0, "%s\n", p->lines[i]);
 
         refresh();
         usleep(1000);
@@ -121,7 +123,8 @@ bool prog_step(struct Prog *p)
     switch (p->prev)
     {
     case ',':
-        *p->ptr = getchar();
+        while ((*p->ptr = getchar()) == '\n')
+            ;
         break;
     case '.':
         putchar(*p->ptr);
