@@ -48,6 +48,8 @@ void prog_debug(struct Prog *p)
     bool running = true;
     while (running)
     {
+        clear();
+
         mvprintw(0, 0, "Current char: '%c'", p->prev);
         mvprintw(1, 0, "Cell value: %d", *p->ptr);
 
