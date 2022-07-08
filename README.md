@@ -3,6 +3,8 @@ Brainfuck in the form of a 2d game
 
 # Usage
 ## Build
+
+Depends on ncurses
 ```
 git clone https://github.com/longwatermelon/brainscrap
 cd brainscrap
