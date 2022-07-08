@@ -72,6 +72,10 @@ bool prog_step(struct Prog *p)
     } break;
     case 'e':
         return false;
+    case '#':
+        printf("\n==========\nRan into a wall, exiting.\n");
+        printf("Position: %d %d\nDirection: %d %d\n==========\n\n", p->pos.x, p->pos.y, p->dir.x, p->dir.y);
+        exit(0);
     }
 
     switch (p->prev)
