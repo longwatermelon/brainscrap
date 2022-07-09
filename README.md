@@ -33,6 +33,8 @@ make
 The `x` is you. On game start, x will be facing right by default. Control characters (`wasd`, `?`, `e`) are solid and must be in front of the player to be executed, while
 brainfuck commands (`.,+-<>`) are not solid and are executed by stepping on them.
 
+The tile below the x will be evaluated first before the tile in front.
+
 The x will first check the tile in front of it, then move.
 
 # Control characters
