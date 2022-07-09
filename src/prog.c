@@ -91,42 +91,6 @@ bool prog_step(struct Prog *p)
     /* for (size_t i = 0; i < p->n; ++i) */
     /*     printf("%s", p->lines[i]); */
 
-    vec2 select = vec2_add(p->pos, p->dir);
-    char c = p->lines[select.y][select.x];
-
-    switch (c)
-    {
-    case 'w':
-        p->dir = (vec2){ 0, -1 };
-        break;
-    case 'a':
-        p->dir = (vec2){ -1, 0 };
-        break;
-    case 's':
-        p->dir = (vec2){ 0, 1 };
-        break;
-    case 'd':
-        p->dir = (vec2){ 1, 0 };
-        break;
-    case '?':
-    {
-        float angle = *p->ptr ? M_PI / 2.f : -M_PI / 2.f;
-
-        vec2 new = {
-            p->dir.x * cosf(angle) - p->dir.y * sinf(angle),
-            p->dir.x * sinf(angle) + p->dir.y * cosf(angle)
-        };
-
-        p->dir = new;
-    } break;
-    case 'e':
-        return false;
-    case '#':
-        printf("\n==========\nRan into a wall, exiting.\n");
-        printf("Position: %d %d\nDirection: %d %d\n==========\n\n", p->pos.x, p->pos.y, p->dir.x, p->dir.y);
-        exit(0);
-    }
-
     switch (p->prev)
     {
     case ',':
@@ -188,6 +152,41 @@ bool prog_step(struct Prog *p)
         break;
     }
 
+    vec2 select = vec2_add(p->pos, p->dir);
+    char c = p->lines[select.y][select.x];
+
+    switch (c)
+    {
+    case 'w':
+        p->dir = (vec2){ 0, -1 };
+        break;
+    case 'a':
+        p->dir = (vec2){ -1, 0 };
+        break;
+    case 's':
+        p->dir = (vec2){ 0, 1 };
+        break;
+    case 'd':
+        p->dir = (vec2){ 1, 0 };
+        break;
+    case '?':
+    {
+        float angle = *p->ptr ? M_PI / 2.f : -M_PI / 2.f;
+
+        vec2 new = {
+            p->dir.x * cosf(angle) - p->dir.y * sinf(angle),
+            p->dir.x * sinf(angle) + p->dir.y * cosf(angle)
+        };
+
+        p->dir = new;
+    } break;
+    case 'e':
+        return false;
+    case '#':
+        printf("\n==========\nRan into a wall, exiting.\n");
+        printf("Position: %d %d\nDirection: %d %d\n==========\n\n", p->pos.x, p->pos.y, p->dir.x, p->dir.y);
+        exit(0);
+    }
     p->lines[p->pos.y][p->pos.x] = p->prev;
     p->pos = vec2_add(p->pos, p->dir);
 
