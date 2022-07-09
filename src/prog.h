@@ -16,6 +16,10 @@ struct Prog
     // Brainfuck elements
     char array[30000];
     char *ptr;
+
+    // Debug
+    bool debug;
+    char *output;
 };
 
 struct Prog *prog_alloc(char **lines, size_t n);

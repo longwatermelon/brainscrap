@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <ncurses.h>
 #include <unistd.h>
+#include <string.h>
+#include <ncurses.h>
 
 
 struct Prog *prog_alloc(char **lines, size_t n)
@@ -28,6 +29,7 @@ struct Prog *prog_alloc(char **lines, size_t n)
 
 void prog_free(struct Prog *p)
 {
+    if (p->output) free(p->output);
     free(p);
 }
 
@@ -41,6 +43,8 @@ void prog_run(struct Prog *p)
 
 void prog_debug(struct Prog *p)
 {
+    p->debug = true;
+
     initscr();
     noecho();
     curs_set(FALSE);
@@ -57,6 +61,9 @@ void prog_debug(struct Prog *p)
 
         for (size_t i = 0; i < p->n; ++i)
             mvprintw(i + 5, 0, "%s\n", p->lines[i]);
+
+        mvprintw(p->n + 5 + 2, 0, "Output:");
+        mvprintw(p->n + 5 + 3, 0, "%s", p->output);
 
         refresh();
         usleep(1000);
@@ -123,11 +130,49 @@ bool prog_step(struct Prog *p)
     switch (p->prev)
     {
     case ',':
-        while ((*p->ptr = getchar()) == '\n')
-            ;
+        if (p->debug)
+        {
+            nocbreak();
+            echo();
+            curs_set(TRUE);
+
+            mvprintw(p->n + 10, 0, "Enter a string: ");
+
+            char input[100] = { 0 };
+            int i = 0;
+
+            int ch = getch();
+
+            while (ch != '\n')
+            {
+                input[i++] = ch;
+                ch = getch();
+            }
+
+            *p->ptr = input[0];
+
+            noecho();
+            cbreak();
+            curs_set(FALSE);
+        }
+        else
+        {
+            while ((*p->ptr = getchar()) == '\n')
+                ;
+        }
         break;
     case '.':
-        putchar(*p->ptr);
+        if (p->debug)
+        {
+            size_t len = p->output ? strlen(p->output) : 0;
+            p->output = realloc(p->output, sizeof(char) * (len + 2));
+            p->output[len] = *p->ptr;
+            p->output[len + 1] = '\0';
+        }
+        else
+        {
+            putchar(*p->ptr);
+        }
         break;
     case '<':
         --p->ptr;
